@@ -1,0 +1,57 @@
+/* css/style.css */
+
+/* ---------- Variables (palette Willy Snackk) ---------- */
+:root {
+  --color-primary: #E63946;   /* rouge vif */
+  --color-secondary: #FFC300; /* jaune vif */
+  --color-accent: #F77F00;    /* orange */
+  --color-dark: #241C15;      /* texte fonce */
+  --color-light: #FFF8F0;     /* fond creme */
+  --color-white: #FFFFFF;
+
+  --font-heading: 'Poppins', Arial, sans-serif;
+  --font-body: 'Poppins', Arial, sans-serif;
+
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 4rem;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-dark);
+  background-color: var(--color-light);
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.2;
+}
