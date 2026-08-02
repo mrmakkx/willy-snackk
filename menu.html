@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La carte — Willy Snack</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="site-header__inner">
-      <a href="index.html" class="logo"><img src="img/logo.png" alt="Willy Snack" class="logo__img"></a>
+      <a href="index.html" class="logo">
+        <img src="img/logo.png" alt="Willy Snack" class="logo__img">
+        <span class="logo__text">Willy Snack</span>
+      </a>
       <button class="nav__toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
         <span class="nav__toggle-bar"></span>
         <span class="nav__toggle-bar"></span>
@@ -20,124 +23,54 @@
       <nav class="nav">
         <ul class="nav__list" id="nav-list">
           <li><a href="index.html" class="nav__link">Accueil</a></li>
-          <li><a href="menu.html" class="nav__link">La carte</a></li>
+          <li><a href="menu.html" class="nav__link" aria-current="page">La carte</a></li>
           <li><a href="contact.html" class="nav__link">Contact</a></li>
         </ul>
       </nav>
+      <a href="tel:+33695790108" class="btn-call">☎ 06 95 79 01 08</a>
     </div>
   </header>
 
   <main>
     <section class="section menu-page">
-      <h1 class="section__title">La carte</h1>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Burgers</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Classic Snack</span>
-              <p class="menu-item__desc">Steak haché, cheddar, salade, tomate, oignon, sauce burger</p>
-            </div>
-            <span class="menu-item__price">6,50 €</span>
-          </li>
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Willy Double</span>
-              <p class="menu-item__desc">Double steak, double cheddar, bacon, sauce barbecue</p>
-            </div>
-            <span class="menu-item__price">8,90 €</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Kebabs / Tacos</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Kebab poulet</span>
-              <p class="menu-item__desc">Viande de poulet, crudités, sauce blanche ou algérienne</p>
-            </div>
-            <span class="menu-item__price">6,00 €</span>
-          </li>
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Tacos M</span>
-              <p class="menu-item__desc">1 viande au choix, frites, fromage fondu, sauce au choix</p>
-            </div>
-            <span class="menu-item__price">7,50 €</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Sandwichs / Paninis</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Panini poulet curry</span>
-              <p class="menu-item__desc">Poulet, sauce curry, emmental, crudités</p>
-            </div>
-            <span class="menu-item__price">5,50 €</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Accompagnements</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Frites</span>
-            </div>
-            <span class="menu-item__price">3,00 €</span>
-          </li>
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Nuggets (6 pièces)</span>
-            </div>
-            <span class="menu-item__price">4,00 €</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Boissons</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Canette 33cl</span>
-            </div>
-            <span class="menu-item__price">1,80 €</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="menu-category">
-        <h2 class="menu-category__title">Desserts</h2>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <div class="menu-item__info">
-              <span class="menu-item__name">Tiramisu maison</span>
-            </div>
-            <span class="menu-item__price">3,50 €</span>
-          </li>
-        </ul>
-      </div>
+      <h1>La carte</h1>
+      <p class="section__subtitle">Touche un plat pour le voir en photo.</p>
+      <div class="filter-bar" id="filter-bar"></div>
+      <div class="dish-list" id="dish-list"></div>
+      <p class="menu-page__note">Prix en euros, TTC. La carte peut évoluer selon les arrivages.</p>
     </section>
   </main>
 
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal__close" id="modal-close" aria-label="Fermer">✕</button>
+      <div class="modal__photo photo-placeholder" id="modal-photo"></div>
+      <h3 class="modal__name" id="modal-title"></h3>
+      <p class="modal__price" id="modal-price"></p>
+      <p class="modal__desc" id="modal-desc"></p>
+      <a href="tel:+33695790108" class="btn btn--primary modal__call">☎ Commander par téléphone</a>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="site-footer__inner">
-      <p class="site-footer__brand">Willy Snack — Vinça (66320)</p>
-      <ul class="site-footer__social">
-        <li><a href="https://www.facebook.com/profile.php?id=100085368753485" class="site-footer__link" target="_blank" rel="noopener">Facebook</a></li>
-      </ul>
-      <p class="site-footer__legal">&copy; 2026 Willy Snack. Tous droits réservés.</p>
+      <div class="site-footer__brand">
+        <img src="img/logo.png" alt="Willy Snack" class="site-footer__logo">
+        <div>
+          <p>Willy Snack — Vinça (66320)</p>
+          <p class="site-footer__hours">Mercredi → Lundi, 11h00–14h · 18h00–21h</p>
+        </div>
+      </div>
+      <div class="site-footer__social">
+        <a href="https://www.facebook.com/profile.php?id=100085368753485" class="site-footer__link" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/willy__snack/" class="site-footer__link" target="_blank" rel="noopener">Instagram</a>
+      </div>
     </div>
+    <p class="site-footer__legal">&copy; 2026 Willy Snack. Tous droits réservés.</p>
   </footer>
 
-  <script src="js/menu.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="data/menu.js" defer></script>
+  <script src="js/menu-page.js" defer></script>
 </body>
 </html>
