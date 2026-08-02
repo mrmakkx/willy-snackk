@@ -426,6 +426,92 @@ h1, h2, h3 {
   color: var(--color-border-hover);
 }
 
+/* ---------- Nos specialites ---------- */
+.specialties__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.specialty-card {
+  display: block;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-sm);
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+.specialty-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-hover);
+}
+
+.specialty-card__photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  margin-bottom: var(--spacing-sm);
+}
+
+.specialty-card h3 {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.specialty-card p {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.specialty-card__link {
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---------- A propos ---------- */
+.about__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.about__photo {
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+}
+
+.about__content h2 {
+  margin-bottom: var(--spacing-md);
+  font-size: clamp(28px, 6.5vw, 48px);
+}
+
+.about__content p {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.about__stats {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+.about__stat-number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: var(--color-accent);
+}
+
+.about__stat-label {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   background-color: var(--color-footer-bg);
