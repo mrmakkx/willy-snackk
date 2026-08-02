@@ -55,3 +55,84 @@ h1, h2, h3 {
   font-weight: 800;
   line-height: 1.2;
 }
+
+/* ---------- Header ---------- */
+.site-header {
+  background-color: var(--color-primary);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--color-white);
+}
+
+.logo__accent {
+  color: var(--color-secondary);
+}
+
+.nav__list {
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.nav__link {
+  color: var(--color-white);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.nav__link:hover {
+  color: var(--color-secondary);
+}
+
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+}
+
+.nav__toggle-bar {
+  width: 26px;
+  height: 3px;
+  background-color: var(--color-white);
+  border-radius: 2px;
+}
+
+/* Responsive : passage en menu mobile sous 768px */
+@media (max-width: 768px) {
+  .nav__toggle {
+    display: flex;
+  }
+
+  .nav__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: var(--color-primary);
+    padding: var(--spacing-md) var(--spacing-lg);
+    gap: var(--spacing-md);
+    display: none;
+  }
+
+  .nav__list--open {
+    display: flex;
+  }
+}
