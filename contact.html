@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Willy Snackk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="logo">Willy <span class="logo__accent">Snackk</span></a>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav__list" id="nav-list">
+          <li><a href="index.html" class="nav__link">Accueil</a></li>
+          <li><a href="menu.html" class="nav__link">La carte</a></li>
+          <li><a href="contact.html" class="nav__link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section contact-page">
+      <h1 class="section__title">Nous trouver</h1>
+
+      <div class="contact-info">
+        <p class="contact-info__item"><strong>Adresse :</strong> Willy Snackk, 66320 Vinça</p>
+        <p class="contact-info__item"><strong>Téléphone :</strong> 04 68 00 00 00</p>
+        <p class="contact-info__item"><strong>Horaires :</strong> Du mardi au dimanche, 11h30 – 14h et 18h30 – 22h</p>
+      </div>
+
+      <div class="map-embed">
+        <iframe
+          src="https://www.google.com/maps?q=Vin%C3%A7a,66320&output=embed"
+          width="100%"
+          height="400"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Localisation de Willy Snackk à Vinça">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p class="site-footer__brand">Willy Snackk — Vinça (66320)</p>
+      <ul class="site-footer__social">
+        <li><a href="#" class="site-footer__link">Facebook</a></li>
+        <li><a href="#" class="site-footer__link">Instagram</a></li>
+      </ul>
+      <p class="site-footer__legal">&copy; 2026 Willy Snackk. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script src="js/menu.js" defer></script>
+</body>
+</html>
