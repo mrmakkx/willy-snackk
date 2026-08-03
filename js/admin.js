@@ -321,3 +321,36 @@ async function uploadDishPhoto(file) {
   const { data } = supabaseClient.storage.from('plats').getPublicUrl(fileName);
   return data.publicUrl;
 }
+
+dishListEl.addEventListener('click', async (event) => {
+  const btn = event.target.closest('button[data-action="up"], button[data-action="down"]');
+  if (!btn) return;
+
+  const direction = btn.dataset.action;
+  const dish = adminDishes.find((d) => d.id === btn.dataset.id);
+  if (!dish) return;
+
+  const sameCategory = adminDishes
+    .filter((d) => d.categorie === dish.categorie)
+    .sort((a, b) => a.ordre - b.ordre);
+  const index = sameCategory.findIndex((d) => d.id === dish.id);
+  const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+  if (targetIndex < 0 || targetIndex >= sameCategory.length) return;
+
+  const target = sameCategory[targetIndex];
+  const dishOrdre = dish.ordre;
+  const targetOrdre = target.ordre;
+
+  const [{ error: error1 }, { error: error2 }] = await Promise.all([
+    supabaseClient.from('menu_items').update({ ordre: targetOrdre }).eq('id', dish.id),
+    supabaseClient.from('menu_items').update({ ordre: dishOrdre }).eq('id', target.id)
+  ]);
+
+  if (error1 || error2) {
+    window.alert('Le réordonnancement a échoué, réessaie.');
+    return;
+  }
+
+  loadDishes();
+});
