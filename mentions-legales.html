@@ -3,23 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La carte — Willy Snack</title>
-  <meta name="description" content="Découvrez la carte de Willy Snack à Vinça (66320) : burgers, kebabs, tacos, sandwichs, accompagnements et desserts, préparés à la commande.">
-  <link rel="canonical" href="https://willy-snackk.vercel.app/menu.html">
+  <title>Mentions légales — Willy Snack</title>
+  <meta name="description" content="Mentions légales du site Willy Snack : éditeur, hébergeur et informations légales.">
+  <link rel="canonical" href="https://willy-snackk.vercel.app/mentions-legales.html">
   <meta name="theme-color" content="#14110F">
   <link rel="icon" type="image/png" href="img/logo.png">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Willy Snack">
   <meta property="og:locale" content="fr_FR">
-  <meta property="og:url" content="https://willy-snackk.vercel.app/menu.html">
-  <meta property="og:title" content="La carte — Willy Snack">
-  <meta property="og:description" content="Burgers, kebabs, tacos, sandwichs, accompagnements et desserts, préparés à la commande.">
+  <meta property="og:url" content="https://willy-snackk.vercel.app/mentions-legales.html">
+  <meta property="og:title" content="Mentions légales — Willy Snack">
+  <meta property="og:description" content="Mentions légales du site Willy Snack : éditeur, hébergeur et informations légales.">
   <meta property="og:image" content="https://willy-snackk.vercel.app/img/logo.png">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="La carte — Willy Snack">
-  <meta name="twitter:description" content="Burgers, kebabs, tacos, sandwichs, accompagnements et desserts, préparés à la commande.">
-  <meta name="twitter:image" content="https://willy-snackk.vercel.app/img/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,7 +36,7 @@
       <nav class="nav">
         <ul class="nav__list" id="nav-list">
           <li><a href="index.html" class="nav__link">Accueil</a></li>
-          <li><a href="menu.html" class="nav__link" aria-current="page">La carte</a></li>
+          <li><a href="menu.html" class="nav__link">La carte</a></li>
           <li><a href="contact.html" class="nav__link">Contact</a></li>
         </ul>
       </nav>
@@ -49,25 +45,42 @@
   </header>
 
   <main>
-    <section class="section menu-page">
-      <h1>La carte</h1>
-      <p class="section__subtitle">Touche un plat pour le voir en photo.</p>
-      <div class="filter-bar" id="filter-bar"></div>
-      <div class="dish-list" id="dish-list"></div>
-      <p class="menu-page__note">Prix en euros, TTC. La carte peut évoluer selon les arrivages.</p>
+    <section class="section legal-page">
+      <span class="label">Informations légales</span>
+      <h1>Mentions légales</h1>
+      <div class="legal-content">
+        <h2>Éditeur du site</h2>
+        <p>
+          <strong>Willy Snack</strong><br>
+          Statut : entreprise individuelle (micro-entreprise) — [nom et prénom de l'exploitant à compléter]<br>
+          SIRET : [à compléter]<br>
+          Adresse : Cami de Counillac, 66320 Vinça<br>
+          Téléphone : <a href="tel:+33695790108">06 95 79 01 08</a><br>
+          Directeur de la publication : [à compléter]
+        </p>
+
+        <h2>Hébergement</h2>
+        <p>
+          Ce site est hébergé par :<br>
+          <strong>Vercel Inc.</strong><br>
+          440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis<br>
+          <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a>
+        </p>
+
+        <h2>Propriété intellectuelle</h2>
+        <p>L'ensemble des contenus présents sur ce site (textes, photos, logo, mise en page) est la propriété de Willy Snack, sauf mention contraire, et ne peut être reproduit sans autorisation préalable.</p>
+
+        <h2>Liens vers des sites tiers</h2>
+        <p>Ce site contient des liens vers des services tiers (Google Maps, Facebook, Instagram). Willy Snack n'est pas responsable du contenu ni des pratiques de confidentialité de ces sites externes.</p>
+
+        <h2>Limitation de responsabilité</h2>
+        <p>Willy Snack s'efforce d'assurer l'exactitude des informations diffusées sur ce site (carte, prix, horaires) mais ne peut garantir qu'elles soient à jour en permanence. La carte peut évoluer selon les arrivages.</p>
+
+        <h2>Droit applicable</h2>
+        <p>Le présent site est soumis au droit français. En cas de litige, les tribunaux français seront seuls compétents.</p>
+      </div>
     </section>
   </main>
-
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button class="modal__close" id="modal-close" aria-label="Fermer">✕</button>
-      <div class="modal__photo photo-placeholder" id="modal-photo"></div>
-      <h3 class="modal__name" id="modal-title"></h3>
-      <p class="modal__price" id="modal-price"></p>
-      <p class="modal__desc" id="modal-desc"></p>
-      <a href="tel:+33695790108" class="btn btn--primary modal__call">☎ Commander par téléphone</a>
-    </div>
-  </div>
 
   <footer class="site-footer">
     <div class="site-footer__inner">
@@ -87,7 +100,5 @@
   </footer>
 
   <script src="js/nav.js" defer></script>
-  <script src="data/menu.js" defer></script>
-  <script src="js/menu-page.js" defer></script>
 </body>
 </html>
