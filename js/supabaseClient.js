@@ -1,0 +1,4 @@
+const SUPABASE_URL = 'https://nvojdpkzwsjuusmogfup.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52b2pkcGt6d3NqdXVzbW9nZnVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NTcxMDUsImV4cCI6MjEwMTMzMzEwNX0.4GeRCFXxm4Uw83tCoFJmm_lMauFOjApUiLrtjvbbfY0';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
