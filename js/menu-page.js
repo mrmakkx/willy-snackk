@@ -13,36 +13,40 @@ let categories = ['Tout'];
 let activeCategory = 'Tout';
 
 async function loadMenu() {
-  const { data, error } = await supabaseClient
-    .from('menu_items')
-    .select('*')
-    .order('categorie', { ascending: true })
-    .order('ordre', { ascending: true });
+  try {
+    const { data, error } = await supabaseClient
+      .from('menu_items')
+      .select('*')
+      .order('categorie', { ascending: true })
+      .order('ordre', { ascending: true });
 
-  if (error) {
+    if (error) {
+      menuError.hidden = false;
+      return;
+    }
+
+    MENU_DATA = data.map((row) => ({
+      id: row.id,
+      cat: row.categorie,
+      nom: row.nom,
+      prix: row.prix,
+      desc: row.description,
+      photo: row.photo_url
+    }));
+
+    categories = ['Tout', ...new Set(MENU_DATA.map((dish) => dish.cat))];
+
+    const params = new URLSearchParams(window.location.search);
+    activeCategory = params.get('cat') || 'Tout';
+    if (!categories.includes(activeCategory)) {
+      activeCategory = 'Tout';
+    }
+
+    renderChips();
+    renderDishes();
+  } catch {
     menuError.hidden = false;
-    return;
   }
-
-  MENU_DATA = data.map((row) => ({
-    id: row.id,
-    cat: row.categorie,
-    nom: row.nom,
-    prix: row.prix,
-    desc: row.description,
-    photo: row.photo_url
-  }));
-
-  categories = ['Tout', ...new Set(MENU_DATA.map((dish) => dish.cat))];
-
-  const params = new URLSearchParams(window.location.search);
-  activeCategory = params.get('cat') || 'Tout';
-  if (!categories.includes(activeCategory)) {
-    activeCategory = 'Tout';
-  }
-
-  renderChips();
-  renderDishes();
 }
 
 function renderChips() {
