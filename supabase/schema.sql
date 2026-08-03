@@ -1,7 +1,14 @@
 -- Projet Supabase "willy-snack" (region eu-west-3)
 -- Ce projet n'utilise pas la CLI/migrations Supabase : ce fichier documente
 -- le schema tel qu'il a ete reellement execute via l'outil MCP Supabase.
--- Voir docs/superpowers/plans/2026-08-03-admin-menu.md (Task 1).
+-- Voir docs/superpowers/plans/2026-08-03-admin-menu.md (Task 1) et la revue
+-- finale de branche (durcissement RLS post-revue, meme jour).
+
+-- IMPORTANT (verifie et corrige suite a la revue finale) :
+-- l'auto-inscription (signup) doit rester desactivee sur ce projet
+-- (Authentication > Providers > Email > "Allow new users to sign up" = off).
+-- Sans ca, n'importe qui pourrait creer un compte "authenticated" et
+-- profiter des policies d'ecriture ci-dessous.
 
 -- Table des plats
 create table public.menu_items (
@@ -22,48 +29,54 @@ create policy "menu_items_public_read"
   to anon, authenticated
   using (true);
 
-create policy "menu_items_auth_insert"
+-- Ecritures restreintes au seul compte admin (defense en profondeur : reste
+-- correct meme si l'auto-inscription etait un jour reactivee par erreur).
+-- UID du compte admin (admin@willysnack.internal) : ee65a682-fe0e-4c1e-90ef-1a8774c383fc
+
+create policy "menu_items_admin_insert"
   on public.menu_items for insert
   to authenticated
-  with check (true);
+  with check (auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
-create policy "menu_items_auth_update"
+create policy "menu_items_admin_update"
   on public.menu_items for update
   to authenticated
-  using (true)
-  with check (true);
+  using (auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid)
+  with check (auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
-create policy "menu_items_auth_delete"
+create policy "menu_items_admin_delete"
   on public.menu_items for delete
   to authenticated
-  using (true);
+  using (auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
 -- Bucket de stockage des photos de plats
-insert into storage.buckets (id, name, public)
-values ('plats', 'plats', true)
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('plats', 'plats', true, 3145728, array['image/jpeg'])
 on conflict (id) do nothing;
 
-create policy "plats_public_read"
-  on storage.objects for select
-  to anon, authenticated
-  using (bucket_id = 'plats');
+-- Pas de policy SELECT sur storage.objects : le bucket est deja "public",
+-- donc la lecture des fichiers via l'URL /storage/v1/object/public/...
+-- (utilisee par getPublicUrl()) ne passe pas par les RLS. Une policy SELECT
+-- ne servirait qu'a autoriser le listing/enumeration du bucket via l'API
+-- cliente (storage.list()), jamais utilise par ce site.
 
-create policy "plats_auth_insert"
+create policy "plats_admin_insert"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'plats');
+  with check (bucket_id = 'plats' and auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
-create policy "plats_auth_update"
+create policy "plats_admin_update"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'plats');
+  using (bucket_id = 'plats' and auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
-create policy "plats_auth_delete"
+create policy "plats_admin_delete"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'plats');
+  using (bucket_id = 'plats' and auth.uid() = 'ee65a682-fe0e-4c1e-90ef-1a8774c383fc'::uuid);
 
--- Seed : les 9 plats deja presents dans data/menu.js
+-- Seed : les 9 plats de depart (anciennement dans data/menu.js, supprime
+-- a la Task 10 une fois la migration vers Supabase terminee)
 insert into public.menu_items (categorie, nom, prix, description, ordre) values
   ('Burgers', 'Classic Snack', '6,50 €', 'Steak haché, cheddar, salade, tomate, oignon, sauce burger', 1),
   ('Burgers', 'Willy Double', '8,90 €', 'Double steak, double cheddar, bacon, sauce barbecue', 2),
