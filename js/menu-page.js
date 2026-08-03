@@ -73,28 +73,58 @@ function renderDishes() {
   dishes.forEach((dish) => {
     const row = document.createElement('button');
     row.className = 'dish-row';
-    const thumb = dish.photo
-      ? `<img src="${dish.photo}" alt="${dish.nom}" class="dish-row__thumb" loading="lazy">`
-      : `<div class="dish-row__thumb photo-placeholder">PHOTO</div>`;
-    row.innerHTML = `
-      ${thumb}
-      <div class="dish-row__info">
-        <div class="dish-row__top">
-          <span class="dish-row__name">${dish.nom}</span>
-          <span class="dish-row__price">${dish.prix}</span>
-        </div>
-        ${dish.desc ? `<p class="dish-row__desc">${dish.desc}</p>` : ''}
-      </div>
-    `;
+
+    if (dish.photo) {
+      const img = document.createElement('img');
+      img.src = dish.photo;
+      img.alt = dish.nom;
+      img.className = 'dish-row__thumb';
+      img.loading = 'lazy';
+      row.appendChild(img);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'dish-row__thumb photo-placeholder';
+      placeholder.textContent = 'PHOTO';
+      row.appendChild(placeholder);
+    }
+
+    const info = document.createElement('div');
+    info.className = 'dish-row__info';
+
+    const top = document.createElement('div');
+    top.className = 'dish-row__top';
+    const name = document.createElement('span');
+    name.className = 'dish-row__name';
+    name.textContent = dish.nom;
+    const price = document.createElement('span');
+    price.className = 'dish-row__price';
+    price.textContent = dish.prix;
+    top.appendChild(name);
+    top.appendChild(price);
+    info.appendChild(top);
+
+    if (dish.desc) {
+      const desc = document.createElement('p');
+      desc.className = 'dish-row__desc';
+      desc.textContent = dish.desc;
+      info.appendChild(desc);
+    }
+
+    row.appendChild(info);
     row.addEventListener('click', () => openModal(dish));
     dishList.appendChild(row);
   });
 }
 
 function openModal(dish) {
+  modalPhoto.innerHTML = '';
   if (dish.photo) {
     modalPhoto.classList.remove('photo-placeholder');
-    modalPhoto.innerHTML = `<img src="${dish.photo}" alt="${dish.nom}" class="modal__photo-img">`;
+    const img = document.createElement('img');
+    img.src = dish.photo;
+    img.alt = dish.nom;
+    img.className = 'modal__photo-img';
+    modalPhoto.appendChild(img);
   } else {
     modalPhoto.classList.add('photo-placeholder');
     modalPhoto.textContent = `PHOTO — ${dish.nom}`;

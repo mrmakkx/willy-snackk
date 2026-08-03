@@ -83,22 +83,49 @@ function renderAdminList() {
     adminDishes.filter((d) => d.categorie === cat).forEach((dish) => {
       const row = document.createElement('div');
       row.className = 'admin-dish-row';
-      const thumb = dish.photo_url
-        ? `<img src="${dish.photo_url}" alt="${dish.nom}" class="admin-dish-row__thumb">`
-        : `<div class="admin-dish-row__thumb photo-placeholder">PHOTO</div>`;
-      row.innerHTML = `
-        ${thumb}
-        <div class="admin-dish-row__info">
-          <div class="admin-dish-row__name">${dish.nom}</div>
-          <div class="admin-dish-row__price">${dish.prix}</div>
-        </div>
-        <div class="admin-dish-row__actions">
-          <button type="button" data-action="up" data-id="${dish.id}">↑</button>
-          <button type="button" data-action="down" data-id="${dish.id}">↓</button>
-          <button type="button" data-action="edit" data-id="${dish.id}">Modifier</button>
-          <button type="button" data-action="delete" data-id="${dish.id}">Supprimer</button>
-        </div>
-      `;
+
+      if (dish.photo_url) {
+        const img = document.createElement('img');
+        img.src = dish.photo_url;
+        img.alt = dish.nom;
+        img.className = 'admin-dish-row__thumb';
+        row.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'admin-dish-row__thumb photo-placeholder';
+        placeholder.textContent = 'PHOTO';
+        row.appendChild(placeholder);
+      }
+
+      const info = document.createElement('div');
+      info.className = 'admin-dish-row__info';
+      const name = document.createElement('div');
+      name.className = 'admin-dish-row__name';
+      name.textContent = dish.nom;
+      const price = document.createElement('div');
+      price.className = 'admin-dish-row__price';
+      price.textContent = dish.prix;
+      info.appendChild(name);
+      info.appendChild(price);
+      row.appendChild(info);
+
+      const actions = document.createElement('div');
+      actions.className = 'admin-dish-row__actions';
+      [
+        { action: 'up', label: '↑' },
+        { action: 'down', label: '↓' },
+        { action: 'edit', label: 'Modifier' },
+        { action: 'delete', label: 'Supprimer' }
+      ].forEach(({ action, label }) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.action = action;
+        btn.dataset.id = dish.id;
+        btn.textContent = label;
+        actions.appendChild(btn);
+      });
+      row.appendChild(actions);
+
       dishListEl.appendChild(row);
     });
   });
