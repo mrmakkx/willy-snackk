@@ -1,5 +1,6 @@
 const filterBar = document.getElementById('filter-bar');
 const dishList = document.getElementById('dish-list');
+const menuError = document.getElementById('menu-error');
 const modalOverlay = document.getElementById('modal-overlay');
 const modalClose = document.getElementById('modal-close');
 const modalPhoto = document.getElementById('modal-photo');
@@ -7,12 +8,41 @@ const modalTitle = document.getElementById('modal-title');
 const modalPrice = document.getElementById('modal-price');
 const modalDesc = document.getElementById('modal-desc');
 
-const categories = ['Tout', ...new Set(MENU_DATA.map((dish) => dish.cat))];
+let MENU_DATA = [];
+let categories = ['Tout'];
+let activeCategory = 'Tout';
 
-const params = new URLSearchParams(window.location.search);
-let activeCategory = params.get('cat') || 'Tout';
-if (!categories.includes(activeCategory)) {
-  activeCategory = 'Tout';
+async function loadMenu() {
+  const { data, error } = await supabaseClient
+    .from('menu_items')
+    .select('*')
+    .order('categorie', { ascending: true })
+    .order('ordre', { ascending: true });
+
+  if (error) {
+    menuError.hidden = false;
+    return;
+  }
+
+  MENU_DATA = data.map((row) => ({
+    id: row.id,
+    cat: row.categorie,
+    nom: row.nom,
+    prix: row.prix,
+    desc: row.description,
+    photo: row.photo_url
+  }));
+
+  categories = ['Tout', ...new Set(MENU_DATA.map((dish) => dish.cat))];
+
+  const params = new URLSearchParams(window.location.search);
+  activeCategory = params.get('cat') || 'Tout';
+  if (!categories.includes(activeCategory)) {
+    activeCategory = 'Tout';
+  }
+
+  renderChips();
+  renderDishes();
 }
 
 function renderChips() {
@@ -39,8 +69,11 @@ function renderDishes() {
   dishes.forEach((dish) => {
     const row = document.createElement('button');
     row.className = 'dish-row';
+    const thumb = dish.photo
+      ? `<img src="${dish.photo}" alt="${dish.nom}" class="dish-row__thumb" loading="lazy">`
+      : `<div class="dish-row__thumb photo-placeholder">PHOTO</div>`;
     row.innerHTML = `
-      <div class="dish-row__thumb photo-placeholder">PHOTO</div>
+      ${thumb}
       <div class="dish-row__info">
         <div class="dish-row__top">
           <span class="dish-row__name">${dish.nom}</span>
@@ -55,7 +88,13 @@ function renderDishes() {
 }
 
 function openModal(dish) {
-  modalPhoto.textContent = `PHOTO — ${dish.nom}`;
+  if (dish.photo) {
+    modalPhoto.classList.remove('photo-placeholder');
+    modalPhoto.innerHTML = `<img src="${dish.photo}" alt="${dish.nom}" class="modal__photo-img">`;
+  } else {
+    modalPhoto.classList.add('photo-placeholder');
+    modalPhoto.textContent = `PHOTO — ${dish.nom}`;
+  }
   modalTitle.textContent = dish.nom;
   modalPrice.textContent = dish.prix;
   modalDesc.textContent = dish.desc;
@@ -84,5 +123,4 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-renderChips();
-renderDishes();
+loadMenu();
