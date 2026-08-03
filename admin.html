@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Willy Snack</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+  <section class="admin-login" id="admin-login">
+    <form class="admin-login__form" id="login-form">
+      <h1>Willy Snack — Admin</h1>
+      <label for="login-password">Mot de passe</label>
+      <input type="password" id="login-password" required autocomplete="current-password">
+      <button type="submit" class="btn btn--primary">Se connecter</button>
+      <p class="admin-login__error" id="login-error" hidden>Mot de passe incorrect.</p>
+    </form>
+  </section>
+
+  <section class="admin-panel" id="admin-panel" hidden>
+    <header class="admin-panel__header">
+      <h1>Gérer la carte</h1>
+      <button class="btn btn--outline" id="logout-btn">Se déconnecter</button>
+    </header>
+    <button class="btn btn--primary admin-panel__add" id="add-dish-btn">+ Ajouter un plat</button>
+    <div class="admin-dish-list" id="admin-dish-list"></div>
+  </section>
+
+  <div class="modal-overlay" id="form-overlay">
+    <div class="modal" id="form-modal" role="dialog" aria-modal="true" aria-labelledby="form-title">
+      <button class="modal__close" id="form-close" aria-label="Fermer">✕</button>
+      <h3 id="form-title">Ajouter un plat</h3>
+      <form id="dish-form">
+        <input type="hidden" id="dish-id">
+        <label for="dish-categorie">Catégorie</label>
+        <select id="dish-categorie"></select>
+        <input type="text" id="dish-categorie-new" placeholder="Nouvelle catégorie" hidden>
+        <label for="dish-nom">Nom du plat</label>
+        <input type="text" id="dish-nom" required>
+        <label for="dish-prix">Prix</label>
+        <input type="text" id="dish-prix" required placeholder="6,50 €">
+        <label for="dish-description">Description (optionnelle)</label>
+        <textarea id="dish-description"></textarea>
+        <label for="dish-photo">Photo (optionnelle)</label>
+        <input type="file" id="dish-photo" accept="image/*" capture="environment">
+        <p class="admin-form__error" id="form-error" hidden></p>
+        <button type="submit" class="btn btn--primary" id="form-save-btn">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.0/dist/umd/supabase.min.js" integrity="sha384-De+l/Df7qym5QBDVocD3+gW1S7IjR3epf+6KbRDjB3FCCzM/LqVTwqckT6FhFar8" crossorigin="anonymous" defer></script>
+  <script src="js/supabaseClient.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</body>
+</html>

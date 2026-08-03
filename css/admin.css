@@ -1,0 +1,134 @@
+/* ---------- Admin: layout general ---------- */
+.admin-body {
+  min-height: 100vh;
+}
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--container-pad);
+}
+
+.admin-login__form {
+  width: min(360px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-lg);
+}
+
+.admin-login__form label,
+#dish-form label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.admin-login__form input,
+#dish-form input,
+#dish-form select,
+#dish-form textarea {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.admin-login__error,
+.admin-form__error {
+  color: #E45B5B;
+  font-size: 14px;
+}
+
+.admin-panel {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--spacing-lg) var(--container-pad);
+}
+
+.admin-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.admin-panel__add {
+  margin-bottom: var(--spacing-md);
+}
+
+.admin-dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-dish-list__category {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-md);
+}
+
+.admin-dish-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-row);
+  padding: 10px 12px;
+}
+
+.admin-dish-row__thumb {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-thumb);
+  font-size: 7px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-dish-row__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-dish-row__name {
+  font-weight: 700;
+}
+
+.admin-dish-row__price {
+  color: var(--color-accent);
+  font-size: 14px;
+}
+
+.admin-dish-row__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-dish-row__actions button {
+  border: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#dish-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: var(--spacing-sm);
+}
