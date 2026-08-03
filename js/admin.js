@@ -22,34 +22,47 @@ loginForm.addEventListener('submit', async (event) => {
   loginError.hidden = true;
   const password = document.getElementById('login-password').value;
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: ADMIN_EMAIL,
-    password
-  });
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: ADMIN_EMAIL,
+      password
+    });
 
-  if (error) {
+    if (error) {
+      loginError.hidden = false;
+      return;
+    }
+
+    showPanel();
+  } catch (err) {
+    loginError.textContent = 'Une erreur est survenue, réessaie.';
     loginError.hidden = false;
-    return;
   }
-
-  showPanel();
 });
 
 logoutBtn.addEventListener('click', async () => {
-  await supabaseClient.auth.signOut();
-  showLogin();
+  try {
+    await supabaseClient.auth.signOut();
+  } catch (err) {
+    // Ignore: being logged out locally is safe even if the server-side
+    // session wasn't cleanly invalidated.
+  } finally {
+    showLogin();
+  }
 });
 
 async function checkSession() {
-  const { data } = await supabaseClient.auth.getSession();
-  if (data.session) {
-    showPanel();
-  } else {
+  try {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) {
+      showPanel();
+    } else {
+      showLogin();
+    }
+  } catch (err) {
     showLogin();
   }
 }
-
-checkSession();
 
 const dishListEl = document.getElementById('admin-dish-list');
 let adminDishes = [];
@@ -219,6 +232,7 @@ dishListEl.addEventListener('click', (event) => {
   const btn = event.target.closest('button[data-action="edit"]');
   if (!btn) return;
   const dish = adminDishes.find((d) => d.id === btn.dataset.id);
+  if (!dish) return;
   openForm(dish);
 });
 
@@ -349,8 +363,11 @@ dishListEl.addEventListener('click', async (event) => {
 
   if (error1 || error2) {
     window.alert('Le réordonnancement a échoué, réessaie.');
+    loadDishes();
     return;
   }
 
   loadDishes();
 });
+
+checkSession();
