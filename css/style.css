@@ -532,6 +532,27 @@ h1, h2, h3 {
   margin-top: 6px;
 }
 
+.stars {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: -2px;
+}
+
+.stars__empty {
+  color: var(--color-text-tertiary);
+}
+
+.stars__filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 96%;
+  color: var(--color-accent);
+}
+
 .reviews__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
