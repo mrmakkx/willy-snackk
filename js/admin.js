@@ -157,3 +157,110 @@ async function handleDelete(id) {
   }
   loadDishes();
 }
+
+const formOverlay = document.getElementById('form-overlay');
+const formClose = document.getElementById('form-close');
+const dishForm = document.getElementById('dish-form');
+const formTitle = document.getElementById('form-title');
+const formError = document.getElementById('form-error');
+const formSaveBtn = document.getElementById('form-save-btn');
+const categorieSelect = document.getElementById('dish-categorie');
+const categorieNewInput = document.getElementById('dish-categorie-new');
+const addDishBtn = document.getElementById('add-dish-btn');
+const dishPhotoInput = document.getElementById('dish-photo');
+
+function populateCategorieSelect(selected) {
+  const categories = [...new Set(adminDishes.map((d) => d.categorie))];
+  categorieSelect.innerHTML = '';
+  categories.forEach((cat) => {
+    const option = document.createElement('option');
+    option.value = cat;
+    option.textContent = cat;
+    categorieSelect.appendChild(option);
+  });
+  const newOption = document.createElement('option');
+  newOption.value = '__new__';
+  newOption.textContent = '+ Nouvelle catégorie…';
+  categorieSelect.appendChild(newOption);
+
+  if (selected && categories.includes(selected)) {
+    categorieSelect.value = selected;
+  }
+  categorieNewInput.hidden = categorieSelect.value !== '__new__';
+}
+
+categorieSelect.addEventListener('change', () => {
+  categorieNewInput.hidden = categorieSelect.value !== '__new__';
+});
+
+function openForm(dish) {
+  dishForm.reset();
+  document.getElementById('dish-id').value = dish ? dish.id : '';
+  formTitle.textContent = dish ? 'Modifier le plat' : 'Ajouter un plat';
+  populateCategorieSelect(dish ? dish.categorie : '');
+  document.getElementById('dish-nom').value = dish ? dish.nom : '';
+  document.getElementById('dish-prix').value = dish ? dish.prix : '';
+  document.getElementById('dish-description').value = dish ? dish.description : '';
+  formError.hidden = true;
+  formOverlay.classList.add('modal-overlay--open');
+}
+
+function closeForm() {
+  formOverlay.classList.remove('modal-overlay--open');
+}
+
+addDishBtn.addEventListener('click', () => openForm(null));
+formClose.addEventListener('click', closeForm);
+formOverlay.addEventListener('click', (event) => {
+  if (event.target === formOverlay) closeForm();
+});
+
+dishListEl.addEventListener('click', (event) => {
+  const btn = event.target.closest('button[data-action="edit"]');
+  if (!btn) return;
+  const dish = adminDishes.find((d) => d.id === btn.dataset.id);
+  openForm(dish);
+});
+
+dishForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  formError.hidden = true;
+  formSaveBtn.disabled = true;
+
+  const id = document.getElementById('dish-id').value;
+  const categorie = categorieSelect.value === '__new__'
+    ? categorieNewInput.value.trim()
+    : categorieSelect.value;
+  const nom = document.getElementById('dish-nom').value.trim();
+  const prix = document.getElementById('dish-prix').value.trim();
+  const description = document.getElementById('dish-description').value.trim();
+
+  if (!categorie) {
+    formError.textContent = 'La catégorie est obligatoire.';
+    formError.hidden = false;
+    formSaveBtn.disabled = false;
+    return;
+  }
+
+  const payload = { categorie, nom, prix, description };
+
+  let error;
+  if (id) {
+    ({ error } = await supabaseClient.from('menu_items').update(payload).eq('id', id));
+  } else {
+    const existingInCat = adminDishes.filter((d) => d.categorie === categorie).length;
+    payload.ordre = existingInCat + 1;
+    ({ error } = await supabaseClient.from('menu_items').insert(payload));
+  }
+
+  formSaveBtn.disabled = false;
+
+  if (error) {
+    formError.textContent = 'La sauvegarde a échoué, réessaie.';
+    formError.hidden = false;
+    return;
+  }
+
+  closeForm();
+  loadDishes();
+});
