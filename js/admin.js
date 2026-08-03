@@ -234,6 +234,7 @@ dishForm.addEventListener('submit', async (event) => {
   const nom = document.getElementById('dish-nom').value.trim();
   const prix = document.getElementById('dish-prix').value.trim();
   const description = document.getElementById('dish-description').value.trim();
+  const file = dishPhotoInput.files[0];
 
   if (!categorie) {
     formError.textContent = 'La catégorie est obligatoire.';
@@ -243,6 +244,18 @@ dishForm.addEventListener('submit', async (event) => {
   }
 
   const payload = { categorie, nom, prix, description };
+  const existingDish = id ? adminDishes.find((d) => d.id === id) : null;
+
+  if (file) {
+    try {
+      payload.photo_url = await uploadDishPhoto(file);
+    } catch (uploadErr) {
+      formError.textContent = "L'envoi de la photo a échoué, réessaie.";
+      formError.hidden = false;
+      formSaveBtn.disabled = false;
+      return;
+    }
+  }
 
   let error;
   if (id) {
@@ -261,6 +274,50 @@ dishForm.addEventListener('submit', async (event) => {
     return;
   }
 
+  if (file && existingDish && existingDish.photo_url) {
+    const oldPath = existingDish.photo_url.split('/plats/')[1];
+    if (oldPath) {
+      await supabaseClient.storage.from('plats').remove([oldPath]);
+    }
+  }
+
   closeForm();
   loadDishes();
 });
+
+function compressImage(file, maxWidth = 1200, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', quality);
+      };
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadDishPhoto(file) {
+  const compressed = await compressImage(file);
+  const fileName = `${crypto.randomUUID()}.jpg`;
+  const { error: uploadError } = await supabaseClient.storage
+    .from('plats')
+    .upload(fileName, compressed, { contentType: 'image/jpeg' });
+
+  if (uploadError) {
+    throw uploadError;
+  }
+
+  const { data } = supabaseClient.storage.from('plats').getPublicUrl(fileName);
+  return data.publicUrl;
+}
