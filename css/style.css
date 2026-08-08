@@ -361,6 +361,7 @@ h1, h2, h3 {
   height: 80px;
   border-radius: var(--radius-card);
   font-size: 9px;
+  object-fit: cover;
 }
 
 .hero__inner {
