@@ -22,6 +22,10 @@ loginForm.addEventListener('submit', async (event) => {
   loginError.hidden = true;
   const password = document.getElementById('login-password').value;
 
+  // Empeche la double soumission pendant l'aller-retour reseau.
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
+  if (submitBtn) submitBtn.disabled = true;
+
   try {
     const { error } = await supabaseClient.auth.signInWithPassword({
       email: ADMIN_EMAIL,
@@ -29,6 +33,9 @@ loginForm.addEventListener('submit', async (event) => {
     });
 
     if (error) {
+      // textContent reassigne a chaque fois : sans ca, le message generique
+      // du catch restait affiche lors des tentatives suivantes.
+      loginError.textContent = 'Mot de passe incorrect.';
       loginError.hidden = false;
       return;
     }
@@ -37,6 +44,8 @@ loginForm.addEventListener('submit', async (event) => {
   } catch (err) {
     loginError.textContent = 'Une erreur est survenue, réessaie.';
     loginError.hidden = false;
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
 });
 
@@ -156,18 +165,27 @@ async function handleDelete(id) {
   const confirmed = window.confirm(`Supprimer "${dish.nom}" ?`);
   if (!confirmed) return;
 
-  if (dish.photo_url) {
-    const path = dish.photo_url.split('/plats/')[1];
-    if (path) {
-      await supabaseClient.storage.from('plats').remove([path]);
-    }
-  }
-
+  // La ligne d'abord, la photo ensuite : dans l'ordre inverse, un echec du
+  // delete laissait une ligne pointant vers une photo supprimee, donc une
+  // image cassee sur la carte publique.
   const { error } = await supabaseClient.from('menu_items').delete().eq('id', id);
   if (error) {
     window.alert('La suppression a échoué, réessaie.');
     return;
   }
+
+  if (dish.photo_url) {
+    const path = dish.photo_url.split('/plats/')[1];
+    if (path) {
+      const { error: storageError } = await supabaseClient.storage
+        .from('plats')
+        .remove([path]);
+      if (storageError) {
+        console.warn('Photo orpheline laissee dans le bucket :', path, storageError);
+      }
+    }
+  }
+
   loadDishes();
 }
 

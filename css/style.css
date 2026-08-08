@@ -742,8 +742,39 @@ img.dish-row__thumb {
 }
 
 .dish-row__desc {
+  display: block;
   font-size: 14px;
   color: var(--color-text-secondary);
+}
+
+/* Squelette affiche pendant le chargement de la carte depuis Supabase. */
+.dish-row--skeleton {
+  height: 92px;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    #1D1714 0%,
+    #2A231E 50%,
+    #1D1714 100%
+  );
+  background-size: 200% 100%;
+  animation: dish-skeleton 1.4s ease-in-out infinite;
+}
+
+@keyframes dish-skeleton {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dish-row--skeleton {
+    animation: none;
+    background: #1D1714;
+  }
+}
+
+#menu-retry {
+  margin-top: var(--spacing-sm);
 }
 
 .menu-page__note {

@@ -11,8 +11,45 @@ const modalDesc = document.getElementById('modal-desc');
 let MENU_DATA = [];
 let categories = ['Tout'];
 let activeCategory = 'Tout';
+let lastFocused = null;
+
+function showLoading() {
+  menuError.hidden = true;
+  dishList.innerHTML = '';
+  for (let i = 0; i < 4; i += 1) {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'dish-row dish-row--skeleton';
+    skeleton.setAttribute('aria-hidden', 'true');
+    dishList.appendChild(skeleton);
+  }
+  dishList.setAttribute('aria-busy', 'true');
+}
+
+function showError() {
+  dishList.innerHTML = '';
+  dishList.removeAttribute('aria-busy');
+  menuError.hidden = false;
+  if (!document.getElementById('menu-retry')) {
+    const retry = document.createElement('button');
+    retry.id = 'menu-retry';
+    retry.type = 'button';
+    retry.className = 'btn btn--outline';
+    retry.textContent = 'Réessayer';
+    retry.addEventListener('click', loadMenu);
+    menuError.insertAdjacentElement('afterend', retry);
+  }
+}
+
+function clearError() {
+  menuError.hidden = true;
+  const retry = document.getElementById('menu-retry');
+  if (retry) retry.remove();
+}
 
 async function loadMenu() {
+  clearError();
+  showLoading();
+
   try {
     const { data, error } = await supabaseClient
       .from('menu_items')
@@ -21,7 +58,7 @@ async function loadMenu() {
       .order('ordre', { ascending: true });
 
     if (error) {
-      menuError.hidden = false;
+      showError();
       return;
     }
 
@@ -42,10 +79,11 @@ async function loadMenu() {
       activeCategory = 'Tout';
     }
 
+    dishList.removeAttribute('aria-busy');
     renderChips();
     renderDishes();
   } catch {
-    menuError.hidden = false;
+    showError();
   }
 }
 
@@ -53,8 +91,10 @@ function renderChips() {
   filterBar.innerHTML = '';
   categories.forEach((cat) => {
     const chip = document.createElement('button');
+    chip.type = 'button';
     chip.className = 'chip' + (cat === activeCategory ? ' chip--active' : '');
     chip.textContent = cat;
+    chip.setAttribute('aria-pressed', String(cat === activeCategory));
     chip.addEventListener('click', () => {
       activeCategory = cat;
       renderChips();
@@ -72,6 +112,7 @@ function renderDishes() {
 
   dishes.forEach((dish) => {
     const row = document.createElement('button');
+    row.type = 'button';
     row.className = 'dish-row';
 
     if (dish.photo) {
@@ -82,16 +123,16 @@ function renderDishes() {
       img.loading = 'lazy';
       row.appendChild(img);
     } else {
-      const placeholder = document.createElement('div');
+      const placeholder = document.createElement('span');
       placeholder.className = 'dish-row__thumb photo-placeholder';
       placeholder.textContent = 'PHOTO';
       row.appendChild(placeholder);
     }
 
-    const info = document.createElement('div');
+    const info = document.createElement('span');
     info.className = 'dish-row__info';
 
-    const top = document.createElement('div');
+    const top = document.createElement('span');
     top.className = 'dish-row__top';
     const name = document.createElement('span');
     name.className = 'dish-row__name';
@@ -104,19 +145,22 @@ function renderDishes() {
     info.appendChild(top);
 
     if (dish.desc) {
-      const desc = document.createElement('p');
+      // <span>, pas <p> : un <button> n'accepte que du contenu de phrase.
+      const desc = document.createElement('span');
       desc.className = 'dish-row__desc';
       desc.textContent = dish.desc;
       info.appendChild(desc);
     }
 
     row.appendChild(info);
-    row.addEventListener('click', () => openModal(dish));
+    row.addEventListener('click', () => openModal(dish, row));
     dishList.appendChild(row);
   });
 }
 
-function openModal(dish) {
+function openModal(dish, trigger) {
+  lastFocused = trigger || document.activeElement;
+
   modalPhoto.innerHTML = '';
   if (dish.photo) {
     modalPhoto.classList.remove('photo-placeholder');
@@ -141,6 +185,14 @@ function openModal(dish) {
 function closeModal() {
   modalOverlay.classList.remove('modal-overlay--open');
   document.body.style.overflow = '';
+  if (lastFocused && document.contains(lastFocused)) {
+    lastFocused.focus();
+  }
+  lastFocused = null;
+}
+
+function isModalOpen() {
+  return modalOverlay.classList.contains('modal-overlay--open');
 }
 
 modalClose.addEventListener('click', closeModal);
@@ -152,8 +204,29 @@ modalOverlay.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && modalOverlay.classList.contains('modal-overlay--open')) {
+  if (!isModalOpen()) return;
+
+  if (event.key === 'Escape') {
     closeModal();
+    return;
+  }
+
+  // Piege le focus dans la modale : sans ca, Tab navigue derriere elle.
+  if (event.key === 'Tab') {
+    const focusables = modalOverlay.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 });
 
