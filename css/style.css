@@ -1,6 +1,6 @@
 /* css/style.css */
 
-/* ---------- Variables (design tokens Willy Snack V2) ---------- */
+/* ---------- Variables (design tokens Just Snack V2) ---------- */
 :root {
   --color-bg: #14110F;
   --color-surface: #1D1917;
@@ -487,6 +487,10 @@ h1, h2, h3 {
   width: 100%;
   object-fit: cover;
   display: block;
+}
+
+.about__photo.photo-placeholder {
+  display: flex;
 }
 
 .about__content h2 {

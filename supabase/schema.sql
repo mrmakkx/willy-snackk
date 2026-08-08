@@ -79,7 +79,7 @@ create policy "plats_admin_delete"
 -- a la Task 10 une fois la migration vers Supabase terminee)
 insert into public.menu_items (categorie, nom, prix, description, ordre) values
   ('Burgers', 'Classic Snack', '6,50 €', 'Steak haché, cheddar, salade, tomate, oignon, sauce burger', 1),
-  ('Burgers', 'Willy Double', '8,90 €', 'Double steak, double cheddar, bacon, sauce barbecue', 2),
+  ('Burgers', 'Double Snack', '8,90 €', 'Double steak, double cheddar, bacon, sauce barbecue', 2),
   ('Kebabs / Tacos', 'Kebab poulet', '6,00 €', 'Viande de poulet, crudités, sauce blanche ou algérienne', 1),
   ('Kebabs / Tacos', 'Tacos M', '7,50 €', '1 viande au choix, frites, fromage fondu, sauce au choix', 2),
   ('Sandwichs / Paninis', 'Panini poulet curry', '5,50 €', 'Poulet, sauce curry, emmental, crudités', 1),
