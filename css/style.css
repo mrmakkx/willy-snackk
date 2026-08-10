@@ -67,6 +67,9 @@ ul {
 
 button {
   font: inherit;
+  /* sans ca, un <button> retombe sur le noir par defaut du navigateur :
+     illisible sur le fond sombre du site (cas des lignes de la carte). */
+  color: inherit;
 }
 
 h1, h2, h3 {
@@ -139,6 +142,9 @@ h1, h2, h3 {
 }
 
 .btn--outline {
+  /* sans background explicite, un <button> garde le gris clair du navigateur
+     et le texte creme devient illisible (cas du bouton "Se deconnecter"). */
+  background: none;
   border: 1px solid var(--color-border);
   color: var(--color-text);
 }
@@ -588,22 +594,6 @@ h1, h2, h3 {
   color: var(--color-text-tertiary);
 }
 
-.reviews__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.reviews__leave-link {
-  color: var(--color-text-secondary);
-  font-size: 14px;
-}
-
-.reviews__leave-link:hover {
-  color: var(--color-text);
-}
-
 /* ---------- CTA horaires ---------- */
 .hours-cta__box {
   background-color: var(--color-accent);
@@ -979,25 +969,6 @@ img.dish-row__thumb {
 
 .site-footer__hours {
   color: var(--color-text-tertiary);
-}
-
-.site-footer__social {
-  display: flex;
-  gap: 10px;
-}
-
-.site-footer__link {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  transition: border-color .2s ease, color .2s ease;
-}
-
-.site-footer__link:hover {
-  border-color: var(--color-border-hover);
-  color: var(--color-text);
 }
 
 .site-footer__legal {
