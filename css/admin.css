@@ -132,3 +132,241 @@
   gap: 10px;
   margin-top: var(--spacing-sm);
 }
+
+/* ---------- Onglets ---------- */
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.admin-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-tab {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.admin-tab--active {
+  color: var(--color-text);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ---------- Plat retire de la carte ---------- */
+.admin-dish-row--archive {
+  opacity: .55;
+}
+
+.admin-dish-row--archive .admin-dish-row__name::after {
+  content: ' — retiré de la carte';
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-accent);
+}
+
+/* ---------- Reglages ---------- */
+.admin-reglages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.admin-bloc {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-bloc legend {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 0 8px;
+}
+
+/* la fermeture exceptionnelle doit sauter aux yeux dans la page */
+.admin-bloc--alerte {
+  border-color: var(--color-accent);
+}
+
+.admin-bloc__aide {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.admin-case {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.admin-case input {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.admin-case--compacte {
+  padding: 0;
+  font-size: 13px;
+}
+
+.admin-jour {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-jour__nom {
+  flex: 0 0 92px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.admin-jour__creneaux {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-creneau {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-creneau input {
+  padding: 8px;
+  font-size: 13px;
+}
+
+.admin-form__ok {
+  color: #4ADE80;
+  font-size: 14px;
+}
+
+/* ---------- Frequentation ---------- */
+.stat-cles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.stat-carte {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-md);
+}
+
+.stat-carte__valeur {
+  font-family: var(--font-heading);
+  font-size: 34px;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.stat-carte__libelle {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.stat-carte__precision {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+
+.stat-titre {
+  font-size: 18px;
+  margin: var(--spacing-lg) 0 var(--spacing-sm);
+}
+
+.stat-graphe {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 140px;
+}
+
+.stat-graphe__colonne {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.stat-graphe__barre {
+  background-color: var(--color-accent);
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+}
+
+.stat-graphe__jour {
+  font-size: 9px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.stat-liste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-liste li {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 2fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.stat-liste__barre {
+  height: 8px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-pill);
+  min-width: 4px;
+}
+
+.stat-liste__valeur {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.stat-vide,
+.stat-note {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+.stat-note {
+  margin-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-sm);
+}

@@ -10,6 +10,7 @@ function showPanel() {
   loginSection.hidden = true;
   panelSection.hidden = false;
   loadDishes();
+  if (typeof window.chargerReglages === 'function') window.chargerReglages();
 }
 
 function showLogin() {
@@ -104,7 +105,7 @@ function renderAdminList() {
 
     adminDishes.filter((d) => d.categorie === cat).forEach((dish) => {
       const row = document.createElement('div');
-      row.className = 'admin-dish-row';
+      row.className = 'admin-dish-row' + (dish.actif ? '' : ' admin-dish-row--archive');
 
       if (dish.photo_url) {
         const img = document.createElement('img');
@@ -137,7 +138,9 @@ function renderAdminList() {
         { action: 'up', label: '↑' },
         { action: 'down', label: '↓' },
         { action: 'edit', label: 'Modifier' },
-        { action: 'delete', label: 'Supprimer' }
+        // Archiver plutot que supprimer : un plat retire de la carte revient
+        // souvent, et une suppression emportait aussi sa photo, sans retour possible.
+        { action: 'archive', label: dish.actif ? 'Retirer' : 'Remettre' }
       ].forEach(({ action, label }) => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -154,36 +157,32 @@ function renderAdminList() {
 }
 
 dishListEl.addEventListener('click', (event) => {
-  const btn = event.target.closest('button[data-action="delete"]');
+  const btn = event.target.closest('button[data-action="archive"]');
   if (!btn) return;
-  handleDelete(btn.dataset.id);
+  basculerArchive(btn.dataset.id);
 });
 
-async function handleDelete(id) {
+// Retirer un plat de la carte ne l'efface plus : il disparait du site public
+// mais reste ici, avec sa photo, et peut revenir en un clic. Une suppression
+// definitive emportait la photo du stockage, sans aucun moyen de revenir en
+// arriere — et un plat retire revient souvent la saison suivante.
+async function basculerArchive(id) {
   const dish = adminDishes.find((d) => d.id === id);
   if (!dish) return;
-  const confirmed = window.confirm(`Supprimer "${dish.nom}" ?`);
-  if (!confirmed) return;
 
-  // La ligne d'abord, la photo ensuite : dans l'ordre inverse, un echec du
-  // delete laissait une ligne pointant vers une photo supprimee, donc une
-  // image cassee sur la carte publique.
-  const { error } = await supabaseClient.from('menu_items').delete().eq('id', id);
+  const question = dish.actif
+    ? `Retirer "${dish.nom}" de la carte ? Il restera ici et vous pourrez le remettre quand vous voulez.`
+    : `Remettre "${dish.nom}" sur la carte ?`;
+  if (!window.confirm(question)) return;
+
+  const { error } = await supabaseClient
+    .from('menu_items')
+    .update({ actif: !dish.actif })
+    .eq('id', id);
+
   if (error) {
-    window.alert('La suppression a échoué, réessaie.');
+    window.alert('L\'opération a échoué, réessaie.');
     return;
-  }
-
-  if (dish.photo_url) {
-    const path = dish.photo_url.split('/plats/')[1];
-    if (path) {
-      const { error: storageError } = await supabaseClient.storage
-        .from('plats')
-        .remove([path]);
-      if (storageError) {
-        console.warn('Photo orpheline laissee dans le bucket :', path, storageError);
-      }
-    }
   }
 
   loadDishes();

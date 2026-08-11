@@ -33,6 +33,20 @@
   --spacing-xl: 60px;
 }
 
+/* Sans cette declaration le navigateur croit la page claire et dessine son
+   anneau de focus en noir, invisible sur le fond sombre du site. Elle accorde
+   aussi les barres de defilement et les controles de formulaire. */
+:root {
+  color-scheme: dark;
+}
+
+/* Focus clavier. Il ne s'affiche qu'a la navigation au clavier, jamais au clic. */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* ---------- Reset ---------- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -103,6 +117,30 @@ h1, h2, h3 {
   text-transform: uppercase;
   color: var(--color-accent);
   margin-bottom: var(--spacing-sm);
+}
+
+/* ---------- Fermeture exceptionnelle ---------- */
+
+/* Place tout en haut, avant l'en-tete : c'est la seule information qui doit
+   passer avant le reste quand l'etablissement est ferme sans preavis. */
+.bandeau-fermeture {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  padding: 12px var(--container-pad);
+  text-align: center;
+}
+
+.bandeau-fermeture__texte {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.bandeau-fermeture__retour {
+  max-width: var(--container-max);
+  margin: 2px auto 0;
+  font-size: 13px;
 }
 
 /* ---------- Badge d'ouverture en direct ---------- */

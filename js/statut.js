@@ -1,11 +1,14 @@
 // Badge "ouvert / ferme" calcule en direct.
 //
-// Les horaires ne sont pas ecrits ici : ils sont lus dans le balisage
-// Schema.org de la page (openingHoursSpecification), qui sert aussi a Google.
-// Une seule source de verite, donc pas de risque que le badge et le tableau
-// des horaires finissent par se contredire.
+// Les horaires viennent des reglages modifiables depuis l'admin. Si la base est
+// injoignable, on retombe sur le balisage Schema.org ecrit en dur dans la page :
+// mieux vaut un horaire theorique qu'aucune information.
+//
+// Une fermeture exceptionnelle l'emporte toujours sur l'horaire habituel : sans
+// cela le badge annoncerait "Ouvert" pendant les conges, et un client se
+// deplacerait pour rien.
 
-const JOURS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const JOURS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const JOURS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
 
 function enMinutes(heure) {
@@ -13,7 +16,22 @@ function enMinutes(heure) {
   return Number(h) * 60 + Number(m || 0);
 }
 
-function lireCreneaux() {
+// depuis les reglages : { "lundi": [["11:00","14:00"], ...], "mardi": [] }
+function creneauxDepuisReglages(horaires) {
+  const parJour = JOURS_FR.map(() => []);
+  Object.entries(horaires || {}).forEach(([jour, creneaux]) => {
+    const i = JOURS_FR.indexOf(jour);
+    if (i === -1) return;
+    (creneaux || []).forEach(([debut, fin]) => {
+      parJour[i].push({ debut: enMinutes(debut), fin: enMinutes(fin) });
+    });
+  });
+  parJour.forEach((c) => c.sort((a, b) => a.debut - b.debut));
+  return parJour;
+}
+
+// repli : balisage Schema.org de la page
+function creneauxDepuisBalisage() {
   const balise = document.querySelector('script[type="application/ld+json"]');
   if (!balise) return null;
 
@@ -27,17 +45,16 @@ function lireCreneaux() {
   const specs = donnees.openingHoursSpecification;
   if (!Array.isArray(specs)) return null;
 
-  // index par jour de la semaine (0 = dimanche), chaque jour = liste de creneaux
-  const parJour = JOURS.map(() => []);
+  const parJour = JOURS_EN.map(() => []);
   specs.forEach((spec) => {
     const jours = Array.isArray(spec.dayOfWeek) ? spec.dayOfWeek : [spec.dayOfWeek];
     jours.forEach((nom) => {
-      const i = JOURS.indexOf(nom);
+      const i = JOURS_EN.indexOf(nom);
       if (i === -1) return;
       parJour[i].push({ debut: enMinutes(spec.opens), fin: enMinutes(spec.closes) });
     });
   });
-  parJour.forEach((creneaux) => creneaux.sort((a, b) => a.debut - b.debut));
+  parJour.forEach((c) => c.sort((a, b) => a.debut - b.debut));
   return parJour;
 }
 
@@ -54,7 +71,7 @@ function maintenantSurPlace() {
 
   const get = (type) => parts.find((p) => p.type === type).value;
   return {
-    jour: JOURS.indexOf(get('weekday')),
+    jour: JOURS_EN.indexOf(get('weekday')),
     minutes: Number(get('hour')) * 60 + Number(get('minute'))
   };
 }
@@ -86,18 +103,32 @@ function calculerStatut(parJour, instant) {
       return { ouvert: false, texte: `Fermé · ouvre ${quand} à ${formaterHeure(creneaux[0].debut)}` };
     }
   }
-  return null;
+  return { ouvert: false, texte: 'Horaires à venir' };
 }
+
+function statutFermetureExceptionnelle(reglages) {
+  if (!reglages || !reglages.fermeture_active) return null;
+  if (!reglages.fermeture_retour) {
+    return { ouvert: false, texte: 'Fermé exceptionnellement' };
+  }
+  const d = new Date(reglages.fermeture_retour + 'T12:00:00');
+  const quand = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(d);
+  return { ouvert: false, texte: `Fermé · retour le ${quand}` };
+}
+
+let reglagesCourants = null;
 
 function afficher() {
   const cibles = document.querySelectorAll('[data-statut]');
   if (!cibles.length) return;
 
-  const parJour = lireCreneaux();
+  const parJour = reglagesCourants
+    ? creneauxDepuisReglages(reglagesCourants.horaires)
+    : creneauxDepuisBalisage();
   if (!parJour) return;
 
-  const statut = calculerStatut(parJour, maintenantSurPlace());
-  if (!statut) return;
+  const statut = statutFermetureExceptionnelle(reglagesCourants)
+    || calculerStatut(parJour, maintenantSurPlace());
 
   cibles.forEach((cible) => {
     cible.classList.toggle('status--ouvert', statut.ouvert);
@@ -110,6 +141,11 @@ function afficher() {
   });
 }
 
-afficher();
-// une page laissee ouverte doit basculer d'elle-meme a l'heure de fermeture
-setInterval(afficher, 60000);
+(async () => {
+  if (window.reglagesCharges) {
+    reglagesCourants = await window.reglagesCharges;
+  }
+  afficher();
+  // une page laissee ouverte doit basculer d'elle-meme a l'heure de fermeture
+  setInterval(afficher, 60000);
+})();

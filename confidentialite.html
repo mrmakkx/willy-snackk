@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="bandeau-fermeture" id="bandeau-fermeture" hidden></div>
   <header class="site-header">
     <div class="site-header__inner">
       <a href="index.html" class="logo">
@@ -41,7 +42,7 @@
           <li><a href="contact.html" class="nav__link">Contact</a></li>
         </ul>
       </nav>
-      <a href="tel:+33639984512" class="btn-call">☎ 06 39 98 45 12</a>
+      <a data-tel-lien href="tel:+33639984512" class="btn-call" data-tel-texte>☎ 06 39 98 45 12</a>
     </div>
   </header>
 
@@ -61,7 +62,11 @@
         </p>
 
         <h2>Données collectées</h2>
-        <p>Ce site ne comporte ni formulaire ni compte utilisateur destiné au public. Aucune donnée personnelle de visiteur n'est donc collectée directement.</p>
+        <p>Ce site ne comporte ni formulaire ni compte utilisateur destiné au public. Aucune donnée personnelle de visiteur n'est collectée.</p>
+
+        <h2>Mesure de fréquentation</h2>
+        <p>Nous comptons les pages consultées afin de savoir si le site est utile. Cette mesure est volontairement anonyme : <strong>ni adresse IP, ni type de navigateur, ni identifiant de visiteur ne sont enregistrés</strong>, et aucun cookie n'est déposé. Nous conservons uniquement des compteurs du type « la carte a été consultée 14 fois le 11 août ».</p>
+        <p>Ces compteurs ne permettent ni de vous reconnaître, ni de vous suivre d'une visite à l'autre, ni de vous distinguer d'un autre visiteur. Ils ne constituent donc pas des données personnelles et ne nécessitent pas votre consentement.</p>
 
         <h2>Cookies et services tiers</h2>
         <p>Le site lui-même ne dépose aucun cookie propre. En revanche, certaines pages intègrent des services tiers susceptibles de déposer leurs propres cookies :</p>
@@ -69,7 +74,7 @@
           <li>La carte Google Maps intégrée sur la page Contact (cookies Google).</li>
           <li>Les polices de caractères chargées depuis Google Fonts.</li>
         </ul>
-        <p>Ce site n'utilise actuellement aucun outil de mesure d'audience (Google Analytics ou équivalent). Cette politique sera mise à jour si cela évolue.</p>
+        <p>Ce site n'utilise aucun outil de mesure d'audience tiers (Google Analytics ou équivalent). Le comptage décrit ci-dessus est interne et anonyme.</p>
 
         <h2>Espace d'administration</h2>
         <p>Le site comporte un espace privé réservé à l'exploitant, protégé par mot de passe et hébergé chez Supabase. Il ne traite aucune donnée de visiteur : il sert uniquement à gérer le contenu de la carte.</p>
@@ -100,6 +105,10 @@
     <p class="site-footer__credit">Fait par <a href="https://www.instagram.com/mrmakkx/" target="_blank" rel="noopener">MrMakkx</a> · <a href="admin.html">Admin</a></p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.0/dist/umd/supabase.min.js" integrity="sha384-De+l/Df7qym5QBDVocD3+gW1S7IjR3epf+6KbRDjB3FCCzM/LqVTwqckT6FhFar8" crossorigin="anonymous" defer></script>
+  <script src="js/supabaseClient.js" defer></script>
+  <script src="js/parametres.js" defer></script>
+  <script src="js/mesure.js" defer></script>
   <script src="js/nav.js" defer></script>
 </body>
 </html>

@@ -192,6 +192,13 @@ function openModal(dish, trigger) {
   modalOverlay.classList.add('modal-overlay--open');
   document.body.style.overflow = 'hidden';
   modalClose.focus();
+
+  // Sur telephone, le reflexe pour fermer une fiche est le bouton retour du
+  // systeme. Sans cette entree d'historique, il quitte la page et le visiteur
+  // perd la carte.
+  history.pushState({ modale: true }, '');
+
+  if (typeof window.mesurer === 'function') window.mesurer('plat', dish.nom);
 }
 
 function closeModal() {
@@ -207,11 +214,25 @@ function isModalOpen() {
   return modalOverlay.classList.contains('modal-overlay--open');
 }
 
-modalClose.addEventListener('click', closeModal);
+// Toute fermeture passe par l'historique, pour que le bouton retour et la croix
+// aient exactement le meme effet.
+function demanderFermeture() {
+  if (history.state && history.state.modale) {
+    history.back();
+  } else {
+    closeModal();
+  }
+}
+
+window.addEventListener('popstate', () => {
+  if (isModalOpen()) closeModal();
+});
+
+modalClose.addEventListener('click', demanderFermeture);
 
 modalOverlay.addEventListener('click', (event) => {
   if (event.target === modalOverlay) {
-    closeModal();
+    demanderFermeture();
   }
 });
 
@@ -219,7 +240,7 @@ document.addEventListener('keydown', (event) => {
   if (!isModalOpen()) return;
 
   if (event.key === 'Escape') {
-    closeModal();
+    demanderFermeture();
     return;
   }
 

@@ -27,11 +27,65 @@
 
   <section class="admin-panel" id="admin-panel" hidden>
     <header class="admin-panel__header">
-      <h1>Gérer la carte</h1>
+      <h1>Gérer mon site</h1>
       <button class="btn btn--outline" id="logout-btn">Se déconnecter</button>
     </header>
-    <button class="btn btn--primary admin-panel__add" id="add-dish-btn">+ Ajouter un plat</button>
-    <div class="admin-dish-list" id="admin-dish-list"></div>
+
+    <div class="admin-tabs" role="tablist">
+      <button type="button" class="admin-tab admin-tab--active" data-onglet="carte" role="tab" aria-selected="true">La carte</button>
+      <button type="button" class="admin-tab" data-onglet="reglages" role="tab" aria-selected="false">Réglages</button>
+      <button type="button" class="admin-tab" data-onglet="frequentation" role="tab" aria-selected="false">Fréquentation</button>
+    </div>
+
+    <div class="admin-onglet" data-panneau="carte">
+      <button class="btn btn--primary admin-panel__add" id="add-dish-btn">+ Ajouter un plat</button>
+      <div class="admin-dish-list" id="admin-dish-list"></div>
+    </div>
+
+    <div class="admin-onglet" data-panneau="reglages" hidden>
+      <form id="reglages-form" class="admin-reglages">
+        <fieldset class="admin-bloc admin-bloc--alerte">
+          <legend>Fermeture exceptionnelle</legend>
+          <p class="admin-bloc__aide">Congés, imprévu, jour férié : à activer pour que le site cesse d'annoncer que vous êtes ouvert.</p>
+          <label class="admin-case">
+            <input type="checkbox" id="fermeture-active">
+            <span>Je suis fermé exceptionnellement</span>
+          </label>
+          <label for="fermeture-message">Message affiché aux clients</label>
+          <input type="text" id="fermeture-message" maxlength="140" placeholder="Fermé pour congés annuels.">
+          <label for="fermeture-retour">Date de réouverture (facultatif)</label>
+          <input type="date" id="fermeture-retour">
+        </fieldset>
+
+        <fieldset class="admin-bloc">
+          <legend>Coordonnées</legend>
+          <label for="reg-nom">Nom de l'établissement</label>
+          <input type="text" id="reg-nom" required maxlength="60">
+          <label for="reg-telephone">Téléphone affiché</label>
+          <input type="text" id="reg-telephone" required maxlength="20" placeholder="06 12 34 56 78">
+          <label for="reg-telephone-lien">Numéro composé au clic</label>
+          <input type="text" id="reg-telephone-lien" required maxlength="20" placeholder="+33612345678">
+          <label for="reg-ville">Ville</label>
+          <input type="text" id="reg-ville" required maxlength="60">
+          <label for="reg-code-postal">Code postal</label>
+          <input type="text" id="reg-code-postal" required maxlength="10">
+        </fieldset>
+
+        <fieldset class="admin-bloc">
+          <legend>Horaires</legend>
+          <p class="admin-bloc__aide">Cochez « Fermé » pour un jour de repos. Laissez un créneau vide si vous ne faites qu'un service.</p>
+          <div id="horaires-jours"></div>
+        </fieldset>
+
+        <p class="admin-form__error" id="reglages-error" hidden></p>
+        <p class="admin-form__ok" id="reglages-ok" hidden>Enregistré. Le site est à jour.</p>
+        <button type="submit" class="btn btn--primary">Enregistrer les réglages</button>
+      </form>
+    </div>
+
+    <div class="admin-onglet" data-panneau="frequentation" hidden>
+      <div id="stats-contenu"></div>
+    </div>
   </section>
 
   <div class="modal-overlay" id="form-overlay">
@@ -60,5 +114,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.0/dist/umd/supabase.min.js" integrity="sha384-De+l/Df7qym5QBDVocD3+gW1S7IjR3epf+6KbRDjB3FCCzM/LqVTwqckT6FhFar8" crossorigin="anonymous" defer></script>
   <script src="js/supabaseClient.js" defer></script>
   <script src="js/admin.js" defer></script>
+  <script src="js/admin-reglages.js" defer></script>
+  <script src="js/admin-stats.js" defer></script>
 </body>
 </html>
