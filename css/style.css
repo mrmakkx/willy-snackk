@@ -105,6 +105,102 @@ h1, h2, h3 {
   margin-bottom: var(--spacing-sm);
 }
 
+/* ---------- Badge d'ouverture en direct ---------- */
+
+/* Un angle ne s'anime que s'il est declare comme tel. Sans @property, le
+   navigateur ignore l'animation et laisse la ligne fixe : degrade, pas casse. */
+@property --statut-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  border-radius: var(--radius-pill);
+  background-color: rgba(20,17,15,.78);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.status__dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--statut-teinte, #8A837D);
+  box-shadow: 0 0 9px var(--statut-teinte, transparent);
+}
+
+.status--ouvert {
+  --statut-teinte: #4ADE80;
+  --statut-rvb: 74 222 128;
+  --statut-pic: #E8FFF0;
+}
+
+/* La ligne tourne aussi quand c'est ferme : elle dit "information en direct",
+   pas "ouvert". Sans cela l'effet serait invisible entre 14h et 18h, soit
+   precisement le creneau ou la demo se fait. */
+.status--ferme {
+  --statut-teinte: #C2B6AA;
+  --statut-rvb: 194 182 170;
+  --statut-pic: #FFF6EC;
+}
+
+/* La ligne qui fait le tour. Le trait est le bord d'un degrade conique en
+   rotation : la partie visible balaie le contour, avec un pic presque blanc
+   qui fait le point lumineux. Le masque ne garde que l'epaisseur du bord. */
+.status--ouvert::before,
+.status--ferme::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  background-image: conic-gradient(
+    from var(--statut-angle),
+    transparent 0 52%,
+    rgb(var(--statut-rvb) / .18) 66%,
+    rgb(var(--statut-rvb) / .6) 80%,
+    rgb(var(--statut-rvb) / 1) 89%,
+    var(--statut-pic) 92%,
+    rgb(var(--statut-rvb) / .8) 94.5%,
+    transparent 98%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgb(var(--statut-rvb) / .7));
+  animation: statutTour 3.4s linear infinite;
+}
+
+@keyframes statutTour {
+  to { --statut-angle: 360deg; }
+}
+
+.hero__statut {
+  margin-bottom: var(--spacing-md);
+}
+
+.contact__statut {
+  margin-bottom: var(--spacing-sm);
+}
+
 .badge {
   display: inline-block;
   border: 1px solid var(--color-accent);
@@ -243,6 +339,11 @@ h1, h2, h3 {
     transition-duration: .01ms !important;
   }
   .marquee__track {
+    animation: none;
+  }
+  /* la ligne se fige sur un arc lisible plutot que de tourner */
+  .status--ouvert::before,
+  .status--ferme::before {
     animation: none;
   }
 }

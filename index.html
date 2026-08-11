@@ -26,6 +26,41 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Source unique des horaires : lue par js/statut.js pour le badge, et par
+       Google pour afficher l'etablissement et ses horaires dans ses resultats. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FastFoodRestaurant",
+    "name": "Just Snack",
+    "url": "https://just-snack.vercel.app/",
+    "image": "https://just-snack.vercel.app/img/og-cover.jpg",
+    "telephone": "+33639984512",
+    "priceRange": "€",
+    "servesCuisine": ["Burgers", "Kebab", "Tacos", "Sandwichs"],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Prades",
+      "postalCode": "66500",
+      "addressCountry": "FR"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "11:00",
+        "closes": "14:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "18:00",
+        "closes": "21:00"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -55,6 +90,10 @@
       <img src="img/hero-grill.webp" alt="Steak haché saisi sur le gril" class="hero__bg" fetchpriority="high" width="1600" height="1000">
       <div class="hero__inner">
         <span class="badge">Snack · Prades</span>
+        <div class="status hero__statut" data-statut role="status" hidden>
+          <span class="status__dot" aria-hidden="true"></span>
+          <span class="status__text"></span>
+        </div>
         <h1 class="hero__title">
           <span class="hero__line">Grillé</span>
           <span class="hero__line">à la</span>
@@ -194,5 +233,6 @@
   </footer>
 
   <script src="js/nav.js" defer></script>
+  <script src="js/statut.js" defer></script>
 </body>
 </html>
