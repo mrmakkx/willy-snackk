@@ -17,11 +17,11 @@
   <meta property="og:url" content="https://just-snack.vercel.app/">
   <meta property="og:title" content="Just Snack — Snack de quartier">
   <meta property="og:description" content="Burgers, kebabs, tacos et sandwichs faits à la commande. Carte, horaires et appel direct.">
-  <meta property="og:image" content="https://just-snack.vercel.app/img/specialite-burger.jpg">
+  <meta property="og:image" content="https://just-snack.vercel.app/img/og-cover.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Just Snack — Snack de quartier">
   <meta name="twitter:description" content="Burgers, kebabs, tacos et sandwichs faits à la commande. Carte, horaires et appel direct.">
-  <meta name="twitter:image" content="https://just-snack.vercel.app/img/specialite-burger.jpg">
+  <meta name="twitter:image" content="https://just-snack.vercel.app/img/og-cover.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -51,7 +51,8 @@
 
   <main>
     <section class="hero">
-      <img src="img/hero-burger.jpg" alt="Cheeseburger maison préparé à la commande" class="hero__photo" loading="lazy" width="120" height="80">
+      <!-- image la plus haute de la page : chargee en priorite, pas en lazy -->
+      <img src="img/hero-burger.webp" alt="Cheeseburger maison préparé à la commande" class="hero__photo" fetchpriority="high" width="120" height="80">
       <div class="hero__inner">
         <span class="badge">Snack · Votre ville</span>
         <h1 class="hero__title">
@@ -90,19 +91,19 @@
         <p class="section__subtitle">Tout est préparé à la commande, jamais à l'avance.</p>
         <div class="specialties__grid">
           <a href="menu.html?cat=Burgers" class="specialty-card">
-            <img src="img/specialite-burger.jpg" alt="Burger maison avec frites fraîches" class="specialty-card__photo" loading="lazy" width="400" height="300">
+            <img src="img/specialite-burger.webp" alt="Burger maison avec frites fraîches" class="specialty-card__photo" loading="lazy" width="400" height="300">
             <h3>Burgers maison</h3>
             <p>Pain qui tient, steak saisi minute, cheddar fondu comme il faut.</p>
             <span class="specialty-card__link">Voir la carte →</span>
           </a>
           <a href="menu.html?cat=Kebabs%20%2F%20Tacos" class="specialty-card">
-            <img src="img/specialite-tacos.jpg" alt="Tacos généreux avec frites" class="specialty-card__photo" loading="lazy" width="400" height="300">
+            <img src="img/specialite-kebab.webp" alt="Kebab généreux garni de viande et de crudités" class="specialty-card__photo" loading="lazy" width="400" height="300">
             <h3>Kebabs &amp; tacos</h3>
             <p>Généreux, sauces maison, frites dedans si tu veux.</p>
             <span class="specialty-card__link">Voir la carte →</span>
           </a>
           <a href="menu.html" class="specialty-card">
-            <div class="specialty-card__photo photo-placeholder">PHOTO — PANINI</div>
+            <img src="img/specialite-reste.webp" alt="Panini garni de charcuterie, fromage et crudités" class="specialty-card__photo" loading="lazy" width="400" height="300">
             <h3>Et le reste</h3>
             <p>Paninis, nuggets, boissons fraîches et tiramisu maison.</p>
             <span class="specialty-card__link">Voir la carte →</span>
@@ -113,7 +114,7 @@
 
     <section class="section about">
       <div class="section__inner about__grid">
-        <div class="about__photo photo-placeholder">PHOTO — L'ÉQUIPE</div>
+        <img src="img/cuisine.webp" alt="Plancha en service dans la cuisine du snack" class="about__photo" loading="lazy" width="400" height="400">
         <div class="about__content">
           <span class="label">La maison</span>
           <h2>Un snack de village, pas une chaîne.</h2>
