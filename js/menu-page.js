@@ -1,4 +1,5 @@
 const filterBar = document.getElementById('filter-bar');
+const filterScroll = document.getElementById('filter-scroll');
 const dishList = document.getElementById('dish-list');
 const menuError = document.getElementById('menu-error');
 const modalOverlay = document.getElementById('modal-overlay');
@@ -87,6 +88,16 @@ async function loadMenu() {
   }
 }
 
+// Signale qu'il reste des categories a droite : sur telephone, 3 des 7 sont
+// hors ecran et la barre de defilement systeme y est invisible.
+function majIndicateurFiltres() {
+  const reste = filterBar.scrollWidth - filterBar.clientWidth - filterBar.scrollLeft;
+  filterScroll.classList.toggle('filter-scroll--suite', reste > 4);
+}
+
+filterBar.addEventListener('scroll', majIndicateurFiltres);
+window.addEventListener('resize', majIndicateurFiltres);
+
 function renderChips() {
   filterBar.innerHTML = '';
   categories.forEach((cat) => {
@@ -102,6 +113,7 @@ function renderChips() {
     });
     filterBar.appendChild(chip);
   });
+  majIndicateurFiltres();
 }
 
 function renderDishes() {
